@@ -1,4 +1,4 @@
-```markdown
+
 # MiniTreasure (MT)
 
 > An ERC-20 token with built-in **vesting schedules** and **tiered staking rewards**, built with [Foundry](https://book.getfoundry.sh/) and [OpenZeppelin](https://www.openzeppelin.com/contracts).
