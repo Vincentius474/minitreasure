@@ -10,12 +10,10 @@ import "@openzeppelin/contracts/access/Ownable.sol";
  * @notice ERC-20 token with capped supply and burnable functionality.
  */
 contract MiniTreasure is ERC20, ERC20Burnable, Ownable {
+
     uint256 public constant MAX_SUPPLY = 1_000_000_000 * 10**18; // 1 billion tokens
 
-    constructor(
-        uint256 initialSupply,
-        address initialOwner
-    ) ERC20("MiniTreasure", "MT") Ownable(initialOwner) {
+    constructor(uint256 initialSupply, address initialOwner) ERC20("MiniTreasure", "MT") Ownable(initialOwner) {
         require(initialSupply <= MAX_SUPPLY, "Initial supply exceeds max");
         _mint(initialOwner, initialSupply);
     }
@@ -25,4 +23,5 @@ contract MiniTreasure is ERC20, ERC20Burnable, Ownable {
         require(totalSupply() + amount <= MAX_SUPPLY, "Exceeds max supply");
         _mint(to, amount);
     }
+    
 }

@@ -6,6 +6,7 @@ import "../src/MiniTreasure.sol";
 import "../src/TokenVesting.sol";
 
 contract TokenVestingTest is Test {
+
     MiniTreasure token;
     TokenVesting vesting;
     address owner = address(0x1);
@@ -17,19 +18,6 @@ contract TokenVestingTest is Test {
         vm.prank(owner);
         token.approve(address(vesting), 1_000_000 * 10**18);
     }
-
-    // function test_CreateSchedule() public {
-    //     vm.prank(owner);
-    //     uint256 id = vesting.createSchedule(alice, block.timestamp, 30 days, 365 days, 1000 * 10**18, true);
-    //     assertEq(id, 0);
-
-    //     // Struct fields in order:
-    //     // (address beneficiary, uint256 start, uint256 cliff, uint256 duration,
-    //     //  uint256 amount, uint256 released, bool revocable, bool revoked)
-
-    //     (address beneficiary, , , , , , , ) = vesting.schedules(id);
-    //     assertEq(beneficiary, alice);
-    // }
 
     function test_CreateSchedule() public {
         vm.prank(owner);
@@ -80,8 +68,6 @@ contract TokenVestingTest is Test {
         vm.warp(block.timestamp + 50 days);
         vm.prank(owner);
         vesting.revoke(0);
-
-        // Alice can still release vested 500 tokens
         vm.prank(alice);
         vesting.release(0);
         assertEq(token.balanceOf(alice), 500 * 10**18);
@@ -137,10 +123,10 @@ contract TokenVestingTest is Test {
         vesting.createSchedule(alice, block.timestamp, 0, 100 days, 1000 * 10**18, false);
 
         vm.warp(block.timestamp + 100 days);
-        vm.prank(owner);  // owner, not alice
+        vm.prank(owner);                                        // owner, not alice
         vesting.release(0);
 
-        assertEq(token.balanceOf(alice), 1000 * 10**18); // still goes to alice
+        assertEq(token.balanceOf(alice), 1000 * 10**18); /      / still goes to alice
     }
 
     function test_RevertReleaseByStranger() public {
@@ -158,13 +144,13 @@ contract TokenVestingTest is Test {
         vesting.createSchedule(alice, block.timestamp, 0, 100 days, 1000 * 10**18, false);
 
         vm.prank(alice);
-        vm.expectRevert("Nothing to release");  // Nothing vested yet
+        vm.expectRevert("Nothing to release");                      // Nothing vested yet
         vesting.release(0);
     }
 
     function test_RevertRevokeNonRevocable() public {
         vm.prank(owner);
-        vesting.createSchedule(alice, block.timestamp, 0, 100 days, 1000 * 10**18, false); // revocable = false
+        vesting.createSchedule(alice, block.timestamp, 0, 100 days, 1000 * 10**18, false);   // revocable = false
 
         vm.prank(owner);
         vm.expectRevert("Not revocable");

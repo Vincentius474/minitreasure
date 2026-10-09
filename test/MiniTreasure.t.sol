@@ -5,6 +5,7 @@ import "forge-std/Test.sol";
 import "../src/MiniTreasure.sol";
 
 contract MiniTreasureTest is Test {
+    
     MiniTreasure token;
     address owner = address(0x1);
     address alice = address(0x2);
@@ -35,4 +36,5 @@ contract MiniTreasureTest is Test {
         token.burn(100 * 10**18);
         assertEq(token.totalSupply(), 999_900 * 10**18);
     }
+
 }

@@ -11,13 +11,14 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
  * @notice Staking with multiple tiers, lock periods, and reward distribution.
  */
 contract MiniTreasureStaking is Ownable, ReentrancyGuard {
+
     using SafeERC20 for IERC20;
 
     struct StakeInfo {
         uint256 amount;
         uint256 startTime;
         uint256 lockDuration;
-        uint256 rewardRate; // APY in basis points (e.g., 500 = 5%)
+        uint256 rewardRate;                 // APY in basis points (e.g., 500 = 5%)
         bool active;
     }
 
@@ -30,7 +31,6 @@ contract MiniTreasureStaking is Ownable, ReentrancyGuard {
 
     event Staked(address indexed user, uint256 amount, uint256 lockDuration, uint256 rewardRate);
     event Unstaked(address indexed user, uint256 amount, uint256 reward);
-    // event EmergencyUnstaked(address indexed user, uint256 amount);
     event EmergencyUnstaked(address indexed user, uint256 payout, uint256 penalty);
 
     constructor(address _stakingToken, address _rewardToken, address initialOwner) Ownable(initialOwner) {
@@ -91,25 +91,6 @@ contract MiniTreasureStaking is Ownable, ReentrancyGuard {
         emit Unstaked(msg.sender, amount, reward);
     }
 
-
-    // function emergencyUnstake(uint256 stakeIndex) external nonReentrant {
-    //     StakeInfo storage s = userStakes[msg.sender][stakeIndex];
-    //     require(s.active, "Stake not active");
-
-    //     uint256 reward = pendingReward(msg.sender, stakeIndex);
-    //     uint256 amount = s.amount;
-
-    //     s.active = false;
-    //     totalStaked[msg.sender] -= amount;
-
-    //     stakingToken.safeTransfer(msg.sender, amount);
-    //     // Emergency: no rewards, 50% penalty applied to principal as protocol fee
-    //     uint256 penalty = amount / 2;
-    //     // Penalty stays in contract (could be redirected to treasury)
-
-    //     emit EmergencyUnstaked(msg.sender, amount);
-    // }
-
     /// @notice Emergency unstake with penalty (50% of rewards forfeited)
     function emergencyUnstake(uint256 stakeIndex) external nonReentrant {
         StakeInfo storage s = userStakes[msg.sender][stakeIndex];
@@ -124,7 +105,6 @@ contract MiniTreasureStaking is Ownable, ReentrancyGuard {
 
         // Penalty stays in contract (protocol fee)
         stakingToken.safeTransfer(msg.sender, payout);
-
         emit EmergencyUnstaked(msg.sender, payout, penalty);
     }
 

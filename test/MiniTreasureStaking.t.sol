@@ -16,7 +16,6 @@ contract MiniTreasureStakingTest is Test {
         token = new MiniTreasure(10_000_000 * 10**18, owner);
         staking = new MiniTreasureStaking(address(token), address(token), owner);
 
-        // Fund staking rewards
         token.approve(address(staking), 5_000_000 * 10**18);
         staking.fundRewards(5_000_000 * 10**18);
 
@@ -42,9 +41,8 @@ contract MiniTreasureStakingTest is Test {
         vm.prank(alice);
         staking.stake(10_000 * 10**18, 30 days);
 
-        vm.warp(block.timestamp + 30 days);
+        vm.warp(block.timestamp + 30 days);                                 // 5% APY for 30 days ≈ 41 tokens
         uint256 reward = staking.pendingReward(alice, 0);
-        // 5% APY for 30 days ≈ 41 tokens
         assertGt(reward, 0);
     }
 
@@ -58,7 +56,7 @@ contract MiniTreasureStakingTest is Test {
         vm.prank(alice);
         staking.unstake(0);
 
-        assertGt(token.balanceOf(alice), balanceBefore); // Got principal + reward
+        assertGt(token.balanceOf(alice), balanceBefore);                         // Got principal + reward
     }
 
     function test_RevertUnstakeBeforeLock() public {

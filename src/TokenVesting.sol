@@ -10,6 +10,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
  * @notice Manages vesting schedules with cliff and linear release.
  */
 contract TokenVesting is Ownable {
+
     using SafeERC20 for IERC20;
 
     struct VestingSchedule {
@@ -37,14 +38,8 @@ contract TokenVesting is Ownable {
     }
 
     /// @notice Create a new vesting schedule
-    function createSchedule(
-        address beneficiary,
-        uint256 start,
-        uint256 cliffDuration,
-        uint256 duration,
-        uint256 amount,
-        bool revocable
-    ) external onlyOwner returns (uint256) {
+    function createSchedule(address beneficiary, uint256 start, uint256 cliffDuration, uint256 duration, uint256 amount, bool revocable) 
+    external onlyOwner returns (uint256) {
         require(beneficiary != address(0), "Invalid beneficiary");
         require(duration > 0, "Duration must be > 0");
         require(cliffDuration <= duration, "Cliff exceeds duration");
@@ -72,7 +67,6 @@ contract TokenVesting is Ownable {
         VestingSchedule storage s = schedules[scheduleId];
         if (block.timestamp < s.cliff) return 0;
         if (block.timestamp >= s.start + s.duration) return s.amount;
-
         uint256 elapsed = block.timestamp - s.start;
         return (s.amount * elapsed) / s.duration;
     }
@@ -110,4 +104,5 @@ contract TokenVesting is Ownable {
         }
         emit ScheduleRevoked(scheduleId, unvested);
     }
+    
 }
