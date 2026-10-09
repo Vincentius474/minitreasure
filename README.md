@@ -1,6 +1,7 @@
-![Uploading MiniTreasure Tokenomics Blueprint.png…]()
-
 # MiniTreasure (MT)
+
+<img width="1536" height="1024" alt="MiniTreasure Tokenomics Blueprint" src="https://github.com/user-attachments/assets/b460e8ae-d43b-4a11-b126-105a3f2bd442" />
+
 
 > An ERC-20 token with built-in **vesting schedules** and **tiered staking rewards**, built with [Foundry](https://book.getfoundry.sh/) and [OpenZeppelin](https://www.openzeppelin.com/contracts).
 
